@@ -101,6 +101,7 @@ name = "frontend"
 version = "0.1.0"
 dependencies = [
  "gloo-net 0.2.6",
+ "serde",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
