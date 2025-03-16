@@ -1,9 +1,20 @@
 #[macro_use]
 extern crate rocket;
+use dotenvy::dotenv;
+
+use mistralai_client::v1::{
+    chat::{ChatMessage, ChatMessageRole, ChatParams},
+    client::Client,
+    constants::Model,
+};
 use std::io::Cursor;
+use tokio::time::{Duration, sleep};
 
 use rocket::{
-    http::ContentType, response::Responder, serde::{json::Json, Deserialize, Serialize}, Response
+    Response,
+    http::ContentType,
+    response::Responder,
+    serde::{Deserialize, Serialize, json::Json},
 };
 use rust_xlsxwriter::Workbook;
 
@@ -19,7 +30,22 @@ struct Question {
 }
 
 #[post("/api/v1/prompt", format = "text/plain", data = "<prompt>")]
-fn prompt(prompt: String) -> Json<Vec<Question>> {
+async fn prompt(prompt: String) -> Json<Vec<Question>> {
+    let client = Client::new(None, None, None, None).unwrap();
+
+    let model = Model::OpenMistral7b;
+    let messages = vec![ChatMessage {
+        role: ChatMessageRole::User,
+        content: prompt.to_string(),
+        tool_calls: None,
+    }];
+    let options = ChatParams {
+        temperature: 0.0,
+        random_seed: Some(42),
+        ..Default::default()
+    };
+    sleep(Duration::from_secs(1)).await;
+    // let question = result.choices[0].message.content.clone();
     let question = prompt.clone();
 
     let answers = vec![
@@ -118,5 +144,6 @@ async fn export_questions(questions: Json<Vec<Question>>) -> WorkbooResponse {
 
 #[launch]
 fn rocket() -> _ {
+    dotenv().unwrap();
     rocket::build().mount("/", routes![index, prompt, export_questions])
 }
