@@ -10,7 +10,7 @@ fn index() -> &'static str {
 struct Question {
     question: String,
     answers: HashMap<String, String>,
-    correct_answer: String,
+    correct: Vec<String>,
 }
 
 #[post("/api/v1/prompt", format = "text/plain", data = "<prompt>")]
@@ -23,12 +23,12 @@ fn prompt(prompt: String) -> Json<Vec<Question>> {
     answers.insert("C".to_string(), "Placeholder Answer 3".to_string());
     answers.insert("D".to_string(), "Placeholder Answer 4".to_string());
 
-    let correct_answer = "A".to_string(); // Placeholder correct answer
+    let correct = vec!["A".to_string()]; 
 
     let response = vec![Question {
         question,
         answers,
-        correct_answer,
+        correct,
     }];
 
     Json(response)
