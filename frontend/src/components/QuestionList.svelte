@@ -18,12 +18,12 @@
         questions.update((qs) => qs.filter((q, i) => i !== index));
     }
 
-    function shuffleAnswers(question: Question) {
+    function shuffleAnswers(question: Question): Question {
         const keys = Object.keys(question.answers);
-        const answers = Object.entries(question.answers).map(
-            ([key, value]) => ({
-                value,
-                correct: question.correct.includes(key),
+        const answers = question.answers.map(
+            (answer, index) => ({
+                value: answer,
+                correct: question.correct.includes(index),
             }),
         );
 
@@ -32,31 +32,16 @@
             [answers[i], answers[j]] = [answers[j], answers[i]];
         }
 
-        const shuffledAnswers = answers.reduce(
-            (
-                acc: Record<string, { value: string; correct: boolean }>,
-                answer,
-                i,
-            ) => {
-                acc[keys[i]] = answer;
-                return acc;
-            },
-            {},
+        const correct = answers .reduce(
+            (acc: number[], { correct }, index) =>
+                correct ? [...acc, index] : acc,
+            [],
         );
-
-        const correct = Object.entries(shuffledAnswers)
-            .filter(([key, answer]) => answer.correct)
-            .map(([key]) => key);
+           
 
         return {
             ...question,
-            answers: Object.entries(shuffledAnswers).reduce(
-                (acc: Record<string, string>, [key, { value }]) => ({
-                    ...acc,
-                    [key]: value,
-                }),
-                {},
-            ),
+            answers: answers.map(({ value }) => value),
             correct,
         };
     }
@@ -70,6 +55,11 @@
 
 <div class="mt-4">
     <h4 class="text-center text-primary">Generated Questions</h4>
+    <div class="mt-3 gap-1 d-flex justify-start">
+            <button class="btn btn-success w-100" on:click={() =>{} }
+        >Export</button
+    >
+    </div>
     <hr />
     {#if $questions.length === 0}
         <p class="text-center text-muted">

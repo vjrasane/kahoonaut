@@ -1,9 +1,9 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { Question } from "./types";
   import PromptInput from "./components/PromptInput.svelte";
   import QuestionList from "./components/QuestionList.svelte";
   import Toast from "./components/Toast.svelte";
+  import type { Question } from "./types";
 
   let questions = writable<Question[]>([]);
   let toastMessage = writable<string | null>(null);
@@ -17,7 +17,7 @@
         body: prompt,
       });
       const data: Question[] = await response.json();
-      questions.set(data);
+      questions.update(prev => [ ...prev, ...data ]);
       toastMessage.set("Questions retrieved successfully!");
       isSuccess.set(true);
     } catch (error) {
@@ -25,12 +25,6 @@
       isSuccess.set(false);
     }
   }
-
-  // function onQuestionChange(
-  //   modifier: (q: Question[]) => Question[],
-  // ) {
-  //   questions.update((qs) => qs.map((q, i) => (i === index ? modifier(q) : q)));
-  // }
 
   function closeToast() {
     toastMessage.set(null);

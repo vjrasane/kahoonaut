@@ -8,11 +8,13 @@
         modifier: (question: Question) => Question,
     ) => void;
 
-    function handleAnswerChange(event: Event, key: string) {
+    function handleAnswerChange(event: Event, index: number) {
         const target = event.target as HTMLInputElement;
         onQuestionChange((question) => ({
             ...question,
-            answers: { ...question.answers, [key]: target.value },
+            answers: question.answers.map((answer, i) =>
+                i === index ? target.value : answer,
+            ),
         }));
     }
     function handleQuestionChange(event: Event) {
@@ -23,13 +25,13 @@
         }));
     }
 
-    function handleCorrectAnswerChange(event: Event, key: string) {
+    function handleCorrectAnswerChange(event: Event, index: number) {
         const target = event.target as HTMLInputElement;
         onQuestionChange((question) => ({
             ...question,
             correct: target.checked
-                ? [...question.correct, key]
-                : question.correct.filter((k) => k !== key),
+                ? [...question.correct, index]
+                : question.correct.filter((k) => k !== index),
         }));
     }
 </script>
@@ -43,21 +45,21 @@
     />
 
     <div class="row g-2 mt-2">
-        {#each Object.entries(question.answers) as [key, value]}
+        {#each question.answers as answer, index}
             <div class="col-6 d-flex align-items-center">
-                <span class="me-2 fw-bold">{key}.</span>
+                <span class="me-2 fw-bold">{index + 1}.</span>
                 <!-- Answer label -->
                 <input
                     type="text"
                     class="form-control me-2"
-                    bind:value={question.answers[key]}
-                    on:input={(e) => handleAnswerChange(e, key)}
+                    bind:value={answer}
+                    on:input={(e) => handleAnswerChange(e, index)}
                 />
                 <input
                     type="checkbox"
                     class="form-check-input"
-                    checked={question.correct.includes(key)}
-                    on:change={(e) => handleCorrectAnswerChange(e, key)}
+                    checked={question.correct.includes(index)}
+                    on:change={(e) => handleCorrectAnswerChange(e, index)}
                 />
             </div>
         {/each}
