@@ -13,8 +13,10 @@
     try {
       const response = await fetch("/api/v1/prompt", {
         method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: prompt,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, 
+          questions: $questions.map(q => q.question)
+         }),
       });
       const data: Question[] = await response.json();
       questions.update(prev => [ ...prev, ...data ]);
