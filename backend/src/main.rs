@@ -7,14 +7,14 @@ fn index() -> &'static str {
     "Hello, world!"
 }
 #[derive(Serialize)]
-struct QuizResponse {
+struct Question {
     question: String,
     answers: HashMap<String, String>,
     correct_answer: String,
 }
 
 #[post("/api/v1/prompt", format = "text/plain", data = "<prompt>")]
-fn prompt(prompt: String) -> Json<QuizResponse> {
+fn prompt(prompt: String) -> Json<Vec<Question>> {
     let question = prompt.clone();
     
     let mut answers = HashMap::new();
@@ -25,11 +25,13 @@ fn prompt(prompt: String) -> Json<QuizResponse> {
 
     let correct_answer = "A".to_string(); // Placeholder correct answer
 
-    Json(QuizResponse {
+    let response = vec![Question {
         question,
         answers,
         correct_answer,
-    })
+    }];
+
+    Json(response)
 }
 
 #[launch]
