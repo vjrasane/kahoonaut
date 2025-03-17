@@ -30,20 +30,20 @@
 	let prompt = '';
 </script>
 
-<form on:submit={() => onSubmit(prompt)}>
+<form on:submit={() => onSubmit(prompt)} class="w-full h-full flex flex-col py-4 pl-4 gap-2">
 	<textarea
 		on:keydown={(e) => {
 			if (e.key !== 'Enter') return;
 			e.preventDefault();
 			onSubmit(prompt);
 		}}
-		class="form-control mb-3"
+		class="textarea w-full flex-grow"
 		rows="5"
 		placeholder="Enter your prompt here..."
 		bind:value={prompt}
 	></textarea>
-	<div class="mt-3 gap-1 d-flex justify-start">
-		<button type="submit" class="btn btn-primary w-100">
+	<div class="flex gap-2">
+		<button type="submit" class="btn btn-primary flex-grow">
 			{#if $isLoading}
 				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 			{/if}
@@ -51,7 +51,7 @@
 		</button>
 		<button
 			type="button"
-			class="btn btn-secondary w-100"
+			class="btn btn-soft flex-grow"
 			on:click={() => {
 				prompt = '';
 			}}>Clear</button
