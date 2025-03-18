@@ -20,9 +20,11 @@
 </script>
 
 <div class="h-screen w-screen flex justify-center items-center">
-	<PromptInputComponent {questions} {showToast} />
+	<div class="grow-2 basis-0 h-full">
+		<PromptInputComponent {questions} {showToast} />
+	</div>
 	<div class="divider divider-horizontal"></div>
-	<div class="card p-4 shadow" style="width: 600px;">
+	<div class="grow-2 basis-0 h-full">
 		<QuestionList {questions} />
 	</div>
 

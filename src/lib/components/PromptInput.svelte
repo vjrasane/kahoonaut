@@ -43,7 +43,7 @@
 		bind:value={prompt}
 	></textarea>
 	<div class="flex gap-2">
-		<button type="submit" class="btn btn-primary flex-grow">
+		<button type="submit" class="btn btn-primary flex-grow" disabled={!prompt || $isLoading}>
 			{#if $isLoading}
 				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 			{/if}
@@ -52,6 +52,7 @@
 		<button
 			type="button"
 			class="btn btn-soft flex-grow"
+			disabled={!prompt}
 			on:click={() => {
 				prompt = '';
 			}}>Clear</button
